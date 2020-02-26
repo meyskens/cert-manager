@@ -30,6 +30,7 @@ type ACMEIssuer struct {
 	Email string `json:"email,omitempty"`
 
 	// Server is the ACME server URL
+	// +kubebuilder:validation:Required
 	Server string `json:"server"`
 
 	// If true, skip verifying the ACME server TLS certificate
@@ -47,7 +48,6 @@ type ACMEIssuer struct {
 
 	// Solvers is a list of challenge solvers that will be used to solve
 	// ACME challenges for the matching domains.
-	// +optional
 	Solvers []ACMEChallengeSolver `json:"solvers,omitempty"`
 }
 
@@ -286,6 +286,7 @@ const (
 // ACMEIssuerDNS01ProviderAkamai is a structure containing the DNS
 // configuration for Akamai DNS—Zone Record Management API
 type ACMEIssuerDNS01ProviderAkamai struct {
+	// +kubebuilder:validation:Required
 	ServiceConsumerDomain string                   `json:"serviceConsumerDomain"`
 	ClientToken           cmmeta.SecretKeySelector `json:"clientTokenSecretRef"`
 	ClientSecret          cmmeta.SecretKeySelector `json:"clientSecretSecretRef"`
@@ -297,14 +298,19 @@ type ACMEIssuerDNS01ProviderAkamai struct {
 type ACMEIssuerDNS01ProviderCloudDNS struct {
 	// +optional
 	ServiceAccount *cmmeta.SecretKeySelector `json:"serviceAccountSecretRef,omitempty"`
-	Project        string                    `json:"project"`
+
+	Project string `json:"project"`
 }
 
 // ACMEIssuerDNS01ProviderCloudflare is a structure containing the DNS
 // configuration for Cloudflare
 type ACMEIssuerDNS01ProviderCloudflare struct {
-	Email    string                    `json:"email"`
-	APIKey   *cmmeta.SecretKeySelector `json:"apiKeySecretRef,omitempty"`
+	Email string `json:"email"`
+
+	// +optional
+	APIKey *cmmeta.SecretKeySelector `json:"apiKeySecretRef,omitempty"`
+
+	// + optional
 	APIToken *cmmeta.SecretKeySelector `json:"apiTokenSecretRef,omitempty"`
 }
 
@@ -380,8 +386,10 @@ const (
 // ACMEIssuerDNS01ProviderAcmeDNS is a structure containing the
 // configuration for ACME-DNS servers
 type ACMEIssuerDNS01ProviderAcmeDNS struct {
+	// +kubebuilder:validation:Required
 	Host string `json:"host"`
 
+	// +kubebuilder:validation:Required
 	AccountSecret cmmeta.SecretKeySelector `json:"accountSecretRef"`
 }
 
@@ -392,6 +400,7 @@ type ACMEIssuerDNS01ProviderRFC2136 struct {
 	// RFC2136 in the form host:port. If the host is an IPv6 address it must be
 	// enclosed in square brackets (e.g [2001:db8::1]) ; port is optional.
 	// This field is required.
+	// +kubebuilder:validation:Required
 	Nameserver string `json:"nameserver"`
 
 	// The name of the secret containing the TSIG value.
@@ -424,6 +433,7 @@ type ACMEIssuerDNS01ProviderWebhook struct {
 	// The name of the solver to use, as defined in the webhook provider
 	// implementation.
 	// This will typically be the name of the provider, e.g. 'cloudflare'.
+	// +kubebuilder:validation:Required
 	SolverName string `json:"solverName"`
 
 	// Additional configuration that should be passed to the webhook apiserver

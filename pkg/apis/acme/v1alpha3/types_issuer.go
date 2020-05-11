@@ -351,7 +351,6 @@ type ACMEIssuerDNS01ProviderRoute53 struct {
 // ACMEIssuerDNS01ProviderAzureDNS is a structure containing the
 // configuration for Azure DNS
 type ACMEIssuerDNS01ProviderAzureDNS struct {
-<<<<<<< HEAD
 
 	// if both this and ClientSecret are left unset MSI will be used
 	// +optional

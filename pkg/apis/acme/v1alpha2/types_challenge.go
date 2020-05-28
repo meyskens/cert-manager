@@ -70,8 +70,8 @@ type ChallengeSpec struct {
 	// +optional
 	Wildcard bool `json:"wildcard"`
 
-	// Type is the type of ACME challenge this resource represents, e.g. "dns01"
-	// or "http01".
+	// Type is the type of ACME challenge this resource represents, e.g. "dns-01"
+	// or "http-01".
 	Type ACMEChallengeType `json:"type"`
 
 	// Token is the ACME challenge token for this challenge.

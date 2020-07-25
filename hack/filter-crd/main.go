@@ -68,9 +68,31 @@ func main() {
 				log.Fatal("CRD versions length is 0")
 			}
 			if len(versions) > 1 {
-				log.Fatal("Multiple CRD versions found while 1 is expected")
+				//log.Fatal("Multiple CRD versions found while 1 is expected")
 			}
 			versionInfo, ok := versions[0].(map[interface{}]interface{})
+			if !ok {
+				log.Fatal("Cannot read version of CRD")
+			}
+
+			// move the schema to the root of the CRD as we only have 1 version specified
+			if validations, exists := versionInfo["schema"]; exists {
+				spec["validation"] = validations
+				delete(versionInfo, "schema")
+			}
+
+			versionInfo, ok = versions[1].(map[interface{}]interface{})
+			if !ok {
+				log.Fatal("Cannot read version of CRD")
+			}
+
+			// move the schema to the root of the CRD as we only have 1 version specified
+			if validations, exists := versionInfo["schema"]; exists {
+				spec["validation"] = validations
+				delete(versionInfo, "schema")
+			}
+
+			versionInfo, ok = versions[2].(map[interface{}]interface{})
 			if !ok {
 				log.Fatal("Cannot read version of CRD")
 			}
@@ -131,7 +153,7 @@ func checkSliceChain(s []interface{}, chain []string) []interface{} {
 						}
 					}
 
-					if value, ok := retainElementForValue[strings.Join(chain, "/")]; ok && value != v.(string) {
+					if value, ok := retainElementForValue[strings.Join(chain, "/")]; ok && value == v.(string) {
 						s = removeFromSlice(s, d)
 					}
 
@@ -187,6 +209,29 @@ func loadVariant() {
 		// only retain the `v1alpha2` version in the CRD
 		retainElementForValue = map[string]string{
 			"spec/versions/[]/name": "v1alpha2",
+		}
+
+		singleCRDVersion = true
+	}
+
+	if variant == "maartje" {
+		// These are the keys that the script will remove for OpenShift 3 and older Kubernetes compatibility
+		removeKeys = []string{
+			//"spec/preserveUnknownFields",
+			//"spec/validation/openAPIV3Schema/type",
+			//"spec/versions/[]/schema/openAPIV3Schema/type",
+			//"spec/conversion",
+			// This field exists on the Issuer and ClusterIssuer CRD
+			//"spec/validation/openAPIV3Schema/properties/spec/properties/acme/properties/solvers/items/properties/dns01/properties/webhook/properties/config/x-kubernetes-preserve-unknown-fields",
+			//"spec/versions/[]/schema/openAPIV3Schema/properties/spec/properties/solver/properties/dns01/properties/webhook/properties/config/x-kubernetes-preserve-unknown-fields",
+			// This field exists on the Challenge CRD
+			//"spec/validation/openAPIV3Schema/properties/spec/properties/solver/properties/dns01/properties/webhook/properties/config/x-kubernetes-preserve-unknown-fields",
+			//"spec/versions/[]/schema/openAPIV3Schema/properties/spec/properties/solver/properties/dns01/properties/webhook/properties/config/x-kubernetes-preserve-unknown-fields",
+		}
+
+		// only retain the `v1alpha2` version in the CRD
+		retainElementForValue = map[string]string{
+			//"spec/versions/[]/name": "v1alpha3",
 		}
 
 		singleCRDVersion = true

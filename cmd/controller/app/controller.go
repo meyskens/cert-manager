@@ -142,6 +142,9 @@ func buildControllerContext(ctx context.Context, stopCh <-chan struct{}, opts *o
 	// Add User-Agent to client
 	kubeCfg = rest.AddUserAgent(kubeCfg, util.CertManagerUserAgent)
 
+	kubeCfg.QPS = 100
+	kubeCfg.Burst = 200
+
 	// Create a cert-manager api client
 	intcl, err := clientset.NewForConfig(kubeCfg)
 	if err != nil {

@@ -86,7 +86,7 @@ func (c *controller) Register(ctx *controllerpkg.Context) (workqueue.RateLimitin
 	c.log = logf.FromContext(ctx.RootContext, ControllerName)
 
 	// create a queue used to queue up items to be processed
-	c.queue = workqueue.NewNamedRateLimitingQueue(workqueue.NewItemExponentialFailureRateLimiter(time.Second*5, time.Minute*30), ControllerName)
+	c.queue = workqueue.NewNamedRateLimitingQueue(workqueue.NewItemExponentialFailureRateLimiter(time.Second, time.Second), ControllerName)
 
 	// obtain references to all the informers used by this controller
 	challengeInformer := ctx.SharedInformerFactory.Acme().V1().Challenges()

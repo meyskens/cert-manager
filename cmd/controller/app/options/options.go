@@ -21,6 +21,8 @@ import (
 	"net"
 	"time"
 
+	"github.com/jetstack/cert-manager/pkg/controller/certificates/trigger"
+
 	"github.com/spf13/pflag"
 
 	cm "github.com/jetstack/cert-manager/pkg/apis/certmanager"
@@ -28,18 +30,10 @@ import (
 	challengescontroller "github.com/jetstack/cert-manager/pkg/controller/acmechallenges"
 	orderscontroller "github.com/jetstack/cert-manager/pkg/controller/acmeorders"
 	cracmecontroller "github.com/jetstack/cert-manager/pkg/controller/certificaterequests/acme"
-	crcacontroller "github.com/jetstack/cert-manager/pkg/controller/certificaterequests/ca"
-	crselfsignedcontroller "github.com/jetstack/cert-manager/pkg/controller/certificaterequests/selfsigned"
-	crvaultcontroller "github.com/jetstack/cert-manager/pkg/controller/certificaterequests/vault"
-	crvenaficontroller "github.com/jetstack/cert-manager/pkg/controller/certificaterequests/venafi"
 	"github.com/jetstack/cert-manager/pkg/controller/certificates/issuing"
 	"github.com/jetstack/cert-manager/pkg/controller/certificates/keymanager"
-	certificatesmetricscontroller "github.com/jetstack/cert-manager/pkg/controller/certificates/metrics"
 	"github.com/jetstack/cert-manager/pkg/controller/certificates/readiness"
 	"github.com/jetstack/cert-manager/pkg/controller/certificates/requestmanager"
-	"github.com/jetstack/cert-manager/pkg/controller/certificates/trigger"
-	clusterissuerscontroller "github.com/jetstack/cert-manager/pkg/controller/clusterissuers"
-	ingressshimcontroller "github.com/jetstack/cert-manager/pkg/controller/ingress-shim"
 	issuerscontroller "github.com/jetstack/cert-manager/pkg/controller/issuers"
 	"github.com/jetstack/cert-manager/pkg/util"
 )
@@ -132,16 +126,16 @@ var (
 
 	defaultEnabledControllers = []string{
 		issuerscontroller.ControllerName,
-		clusterissuerscontroller.ControllerName,
-		certificatesmetricscontroller.ControllerName,
-		ingressshimcontroller.ControllerName,
+		//clusterissuerscontroller.ControllerName,
+		//certificatesmetricscontroller.ControllerName,
+		//ingressshimcontroller.ControllerName,
 		orderscontroller.ControllerName,
 		challengescontroller.ControllerName,
 		cracmecontroller.CRControllerName,
-		crcacontroller.CRControllerName,
-		crselfsignedcontroller.CRControllerName,
-		crvaultcontroller.CRControllerName,
-		crvenaficontroller.CRControllerName,
+		//crcacontroller.CRControllerName,
+		//crselfsignedcontroller.CRControllerName,
+		//crvaultcontroller.CRControllerName,
+		//crvenaficontroller.CRControllerName,
 		// certificate controllers
 		trigger.ControllerName,
 		issuing.ControllerName,

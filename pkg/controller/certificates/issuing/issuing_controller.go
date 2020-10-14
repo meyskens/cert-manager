@@ -86,7 +86,7 @@ func NewController(
 ) (*controller, workqueue.RateLimitingInterface, []cache.InformerSynced) {
 
 	// create a queue used to queue up items to be processed
-	queue := workqueue.NewNamedRateLimitingQueue(workqueue.NewItemExponentialFailureRateLimiter(time.Second*1, time.Second*30), ControllerName)
+	queue := workqueue.NewNamedRateLimitingQueue(workqueue.NewItemExponentialFailureRateLimiter(time.Second, time.Second), ControllerName)
 
 	// obtain references to all the informers used by this controller
 	certificateInformer := cmFactory.Certmanager().V1().Certificates()
@@ -95,7 +95,7 @@ func NewController(
 
 	certificateInformer.Informer().AddEventHandler(&controllerpkg.QueuingEventHandler{Queue: queue})
 	certificateRequestInformer.Informer().AddEventHandler(&controllerpkg.BlockingEventHandler{
-		WorkFunc: certificates.EnqueueCertificatesForResourceUsingPredicates(log, queue, certificateInformer.Lister(), labels.Everything(), predicate.ResourceOwnerOf),
+		WorkFunc: certificates.EnqueueCertificatesForResourceUsingPredicates(log, queue, certificateInformer.Lister(), labels.Everything()),
 	})
 	secretsInformer.Informer().AddEventHandler(&controllerpkg.BlockingEventHandler{
 		// Issuer reconciles on changes to the Secret named `spec.nextPrivateKeySecretName`
